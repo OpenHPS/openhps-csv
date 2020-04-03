@@ -1,4 +1,4 @@
-import { DataFrame, SinkNode, GraphOptions } from "@openhps/core";
+import { DataFrame, SinkNode } from "@openhps/core";
 import * as csv from 'csv-writer';
 import { CsvWriter } from "csv-writer/src/lib/csv-writer";
 import { ObjectMap } from "csv-writer/src/lib/lang/object";
@@ -29,7 +29,7 @@ export class CSVDataSink<In extends DataFrame> extends SinkNode<In> {
         });
     }
 
-    public onPush(data: In, options?: GraphOptions): Promise<void> {
+    public onPush(data: In): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             this._csvWriter.writeRecords([this._writeCallback(data)]).then(_ => {
                 resolve();
