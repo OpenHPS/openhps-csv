@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-alpha.21](https://git.mvdw-software.com/Maximvdw/openhps-testsuite/compare/v1.0.0-alpha.20...v1.0.0-alpha.21) (2020-04-06)
+
 ## [1.0.0-alpha.20](https://git.mvdw-software.com/Maximvdw/openhps-testsuite/compare/v1.0.0-alpha.19...v1.0.0-alpha.20) (2020-04-06)
 
 ## [1.0.0-alpha.19](https://git.mvdw-software.com/Maximvdw/openhps-testsuite/compare/v1.0.0-alpha.18...v1.0.0-alpha.19) (2020-04-06)

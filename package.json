@@ -1,6 +1,6 @@
 {
   "name": "@openhps/csv",
-  "version": "1.0.0-alpha.20",
+  "version": "1.0.0-alpha.21",
   "description": "Open Hybrid Positioning System - CSV Nodes",
   "author": "Maxim Van de Wynckel",
   "license": "Apache-2.0",
