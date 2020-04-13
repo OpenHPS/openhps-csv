@@ -24,10 +24,12 @@ export class CSVDataSource<Out extends DataFrame> extends ListSourceNode<Out> {
                 .pipe(csv(this._headers))
                 .on('data', (row: any) => {
                     const frame = this._rowCallback(row);
-                    if (frame.source === undefined) {
-                        frame.source = this.source;
+                    if (frame !== null && frame !== undefined) {
+                        if (frame.source === undefined) {
+                            frame.source = this.source;
+                        }
+                        inputData.push(frame);   
                     }
-                    inputData.push(frame);   
                 })
                 .on('end', () => {
                     this.inputData = inputData;
