@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-alpha.44](https://git.mvdw-software.com/Maximvdw/openhps-testsuite/compare/v1.0.0-alpha.43...v1.0.0-alpha.44) (2020-04-29)
+
+## [1.0.0-alpha.43](https://git.mvdw-software.com/Maximvdw/openhps-testsuite/compare/v1.0.0-alpha.42...v1.0.0-alpha.43) (2020-04-20)
+
+## [1.0.0-alpha.42](https://git.mvdw-software.com/Maximvdw/openhps-testsuite/compare/v1.0.0-alpha.41...v1.0.0-alpha.42) (2020-04-17)
+
+## [1.0.0-alpha.41](https://git.mvdw-software.com/Maximvdw/openhps-testsuite/compare/v1.0.0-alpha.40...v1.0.0-alpha.41) (2020-04-16)
+
+## [1.0.0-alpha.40](https://git.mvdw-software.com/Maximvdw/openhps-testsuite/compare/v1.0.0-alpha.39...v1.0.0-alpha.40) (2020-04-15)
+
+## [1.0.0-alpha.39](https://git.mvdw-software.com/Maximvdw/openhps-testsuite/compare/v1.0.0-alpha.38...v1.0.0-alpha.39) (2020-04-13)
+
+
+### Bug Fixes
+
+* do not add null frames to source ([98e489a](https://git.mvdw-software.com/Maximvdw/openhps-testsuite/commit/98e489a58d91aff127c73af1619aee9e7c0173e3))
+
 ## [1.0.0-alpha.38](https://git.mvdw-software.com/Maximvdw/openhps-testsuite/compare/v1.0.0-alpha.37...v1.0.0-alpha.38) (2020-04-10)
 
 ## [1.0.0-alpha.37](https://git.mvdw-software.com/Maximvdw/openhps-testsuite/compare/v1.0.0-alpha.36...v1.0.0-alpha.37) (2020-04-10)
