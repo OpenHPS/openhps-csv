@@ -31,7 +31,7 @@ export class CSVDataSink<In extends DataFrame> extends SinkNode<In> {
 
     public onPush(data: In): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            this._csvWriter.writeRecords([this._writeCallback(data)]).then(_ => {
+            this._csvWriter.writeRecords([this._writeCallback(data)]).then(() => {
                 resolve();
             }).catch(ex => {
                 reject(ex);
