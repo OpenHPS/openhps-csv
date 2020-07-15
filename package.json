@@ -34,7 +34,7 @@
     "system"
   ],
   "dependencies": {
-    "@openhps/core": "^1.0.0-alpha.162",
+    "@openhps/core": "^1.0.1-alpha.1",
     "csv-parser": "^2.3.2",
     "csv-writer": "^1.6.0",
     "pedometer": "0.0.5",
