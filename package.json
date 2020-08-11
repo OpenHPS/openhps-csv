@@ -6,48 +6,46 @@
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "https://git.mvdw-software.com/Maximvdw/openhps-testsuite.git"
-  },
-  "publishConfig": {
-    "registry": "https://repo.mvdw-software.com/repository/npm-openhps/"
+    "url": "https://github.com/OpenHPS/openhps-csv.git"
   },
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "test": "mocha --experimental-worker",
-    "test:jenkins": "jenkins-mocha",
+    "test:jenkins": "jenkins-mocha --cobertura",
     "cover": "nyc mocha && nyc report --reporter=cobertura",
     "lint": "tslint -c tslint.json --project tsconfig.json",
     "clean": "shx rm -rf ./dist && shx rm -rf ./docs",
     "build": "npm run clean && npm-run-all --parallel build:**",
     "build:typescript": "tsc",
     "build:typedoc": "typedoc --exclude **/_internal/**/* --excludePrivate --hideGenerator --out docs src",
-    "publish:development": "standard-version --prerelease alpha -m 'chore(alpha): %s [ci-skip]' && npm publish --tag dev",
-    "publish:beta": "standard-version --prerelease beta -m 'chore(beta): %s [ci-skip]' && npm publish --tag beta",
-    "publish:release": "standard-version -m 'chore(release): %s [ci-skip]' && npm publish --tag latest"
+    "publish:development": "standard-version --prerelease alpha -m 'chore(alpha): %s' --author='ci <ci@openhps.org>' && npm publish --tag dev --access public",
+    "publish:beta": "standard-version --prerelease beta -m 'chore(beta): %s' --author='ci <ci@openhps.org>' && npm publish --tag beta --access public",
+    "publish:release": "standard-version -m 'chore(release): %s' --author='ci <ci@openhps.org>' && npm publish --tag latest --access public"
   },
   "keywords": [
     "openhps",
-    "ips",
-    "slam",
-    "hybrid",
-    "positioning",
-    "system"
+    "csv"
   ],
   "dependencies": {
-    "@openhps/core": "^1.0.1-alpha.1",
-    "csv-parser": "^2.3.2",
+    "@openhps/core": ">=0.1.0-alpha.67",
+    "csv-parser": "^2.3.3",
     "csv-writer": "^1.6.0",
-    "pedometer": "0.0.5",
-    "reflect-metadata": "^0.1.13",
-    "typedjson": "^1.5.1"
+    "reflect-metadata": "^0.1.13"
   },
   "devDependencies": {
+    "@babel/cli": "^7.10.5",
+    "@babel/core": "^7.11.1",
+    "@babel/node": "^7.10.5",
+    "@babel/plugin-transform-runtime": "^7.11.0",
+    "@babel/preset-env": "^7.11.0",
+    "@babel/register": "^7.10.5",
+    "@babel/runtime": "^7.11.2",
     "@commitlint/cli": "^8.3.5",
     "@commitlint/config-conventional": "^8.3.4",
-    "@types/chai": "^4.2.11",
+    "@types/chai": "^4.2.12",
     "@types/mocha": "^5.2.7",
-    "@types/node": "^12.12.37",
-    "@types/uuid": "^3.4.9",
+    "@types/node": "^12.12.54",
     "chai": "^4.2.0",
     "husky": "^4.2.5",
     "jenkins-mocha": "^8.0.0",
@@ -56,11 +54,11 @@
     "nyc": "^14.1.1",
     "shx": "^0.3.2",
     "standard-version": "^7.1.0",
-    "ts-node": "^8.9.1",
+    "ts-node": "^8.10.2",
     "tslint": "^5.20.1",
     "tslint-no-circular-imports": "^0.7.0",
     "typedoc": "^0.15.1",
-    "typescript": "^3.8.3"
+    "typescript": "^3.9.7"
   },
   "nyc": {
     "branches": 0,

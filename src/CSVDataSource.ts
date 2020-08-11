@@ -3,16 +3,65 @@ import * as path from 'path';
 import * as fs from 'fs';
 import * as csv from 'csv-parser';
 
+/**
+ * CSVDataSource
+ * 
+ * ## Usage
+ * Files are loaded when the model is build. You can force a reset using the ```reset()``` function.
+ * 
+ * ### Basic Usage
+ * **example1.csv**
+ * ```csv
+ * TIME,NAME,X,Y
+ * 1,Maxim,0,0
+ * 2,Maxim,0,1
+ * 3,Maxim,1,1
+ * ```
+ * **Implementation**
+ * ```typescript
+ * new CSVDataSource("example1.csv", (row: any) => {
+ *  const object = new DataObject(row.NAME);
+ *  const position = new Absolute2DPosition(parseFloat(row.X), parseFloat(row.Y));
+ *  position.timestamp = parseInt(row.TIME);
+ *  object.setPosition(position);
+ *  return new DataFrame(object);
+ * })
+ * ```
+ * 
+ * ### Advanced Usage
+ * For more info, please check the [csv-parser](https://www.npmjs.com/package/csv-parser) documentation.
+ * 
+ * **example3.csv**
+ * ```csv
+ * 1;Maxim;0;0
+ * 2;Maxim;0;1
+ * 3;Maxim;1;1
+ * ```
+ * **Implementation**
+ * ```typescript
+ * new CSVDataSource("example1.csv", (row: any) => {
+ *  const object = new DataObject(row.NAME);
+ *  const position = new Absolute2DPosition(parseFloat(row.X), parseFloat(row.Y));
+ *  position.timestamp = parseInt(row.TIME);
+ *  object.setPosition(position);
+ *  return new DataFrame(object);
+ * }, {
+ *  headers: ["TIME", "NAME", "X", "Y"],
+ *  separator: ";"
+ * })
+ * ```
+ */
 export class CSVDataSource<Out extends DataFrame> extends ListSourceNode<Out> {
     private _rowCallback: (row: any) => Out;
     private _file: string;
     private _options: csv.Options;
 
-    constructor(file: string, rowCallback: (row: any) => Out, options: csv.Options = {}) {
+    constructor(file: string, rowCallback: (row: any) => Out, options: csv.Options & { source?: DataObject } = {}) {
         super([], new DataObject(path.basename(file)));
         this._rowCallback = rowCallback;
         this._file = file;
         this._options = options;
+        this.source = options.source;
 
         this.once("build", this._initCSV.bind(this));
     }
@@ -44,7 +93,7 @@ export class CSVDataSource<Out extends DataFrame> extends ListSourceNode<Out> {
     public reset(): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             this.inputData = [];
-            this._initCSV().then(_ => {
+            this._initCSV().then(() => {
                 resolve();
             }).catch(ex => {
                 reject(ex);
