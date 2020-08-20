@@ -1,14 +1,14 @@
-import { DataFrame, DataObject, ListSourceNode } from "@openhps/core";
+import { DataFrame, DataObject, ListSourceNode, SourceNodeOptions } from '@openhps/core';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as csv from 'csv-parser';
 
 /**
  * CSVDataSource
- * 
+ *
  * ## Usage
  * Files are loaded when the model is build. You can force a reset using the ```reset()``` function.
- * 
+ *
  * ### Basic Usage
  * **example1.csv**
  * ```csv
@@ -27,10 +27,10 @@ import * as csv from 'csv-parser';
  *  return new DataFrame(object);
  * })
  * ```
- * 
+ *
  * ### Advanced Usage
  * For more info, please check the [csv-parser](https://www.npmjs.com/package/csv-parser) documentation.
- * 
+ *
  * **example3.csv**
  * ```csv
  * 1;Maxim;0;0
@@ -54,30 +54,29 @@ import * as csv from 'csv-parser';
 export class CSVDataSource<Out extends DataFrame> extends ListSourceNode<Out> {
     private _rowCallback: (row: any) => Out;
     private _file: string;
-    private _options: csv.Options;
+    protected options: csv.Options & SourceNodeOptions;
 
-    constructor(file: string, rowCallback: (row: any) => Out, options: csv.Options & { source?: DataObject } = {}) {
-        super([], new DataObject(path.basename(file)));
+    constructor(file: string, rowCallback: (row: any) => Out, options: csv.Options & SourceNodeOptions = {}) {
+        super([], options.source ? options.source : new DataObject(path.basename(file)), options);
         this._rowCallback = rowCallback;
         this._file = file;
-        this._options = options;
-        this.source = options.source;
 
-        this.once("build", this._initCSV.bind(this));
+        this.once('build', this._initCSV.bind(this));
     }
 
-    private _initCSV(_?: any): Promise<void> {
+    private _initCSV(): Promise<void> {
         return new Promise((resolve, reject) => {
-            const inputData = new Array();
-            const stream = fs.createReadStream(this._file)
-                .pipe(csv(this._options))
+            const inputData: Out[] = [];
+            const stream = fs
+                .createReadStream(this._file)
+                .pipe(csv(this.options))
                 .on('data', (row: any) => {
                     const frame = this._rowCallback(row);
                     if (frame !== null && frame !== undefined) {
                         if (frame.source === undefined) {
                             frame.source = this.source;
                         }
-                        inputData.push(frame);   
+                        inputData.push(frame);
                     }
                 })
                 .on('end', () => {
@@ -85,6 +84,9 @@ export class CSVDataSource<Out extends DataFrame> extends ListSourceNode<Out> {
                     stream.destroy();
                 })
                 .on('close', function (err: any) {
+                    if (err) {
+                        return reject(err);
+                    }
                     resolve();
                 });
         });
@@ -93,12 +95,13 @@ export class CSVDataSource<Out extends DataFrame> extends ListSourceNode<Out> {
     public reset(): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             this.inputData = [];
-            this._initCSV().then(() => {
-                resolve();
-            }).catch(ex => {
-                reject(ex);
-            });
+            this._initCSV()
+                .then(() => {
+                    resolve();
+                })
+                .catch((ex) => {
+                    reject(ex);
+                });
         });
     }
-    
 }

@@ -8,27 +8,31 @@
     "type": "git",
     "url": "https://github.com/OpenHPS/openhps-csv.git"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "test": "mocha --experimental-worker",
     "test:jenkins": "jenkins-mocha --cobertura",
     "cover": "nyc mocha && nyc report --reporter=cobertura",
-    "lint": "tslint -c tslint.json --project tsconfig.json",
+    "lint": "eslint src/**",
     "clean": "shx rm -rf ./dist && shx rm -rf ./docs",
-    "build": "npm run clean && npm-run-all --parallel build:**",
+    "build": "npm run clean && npm-run-all --parallel build:typescript build:typedoc && npm run build:webpack",
     "build:typescript": "tsc",
+    "build:webpack": "webpack",
     "build:typedoc": "typedoc --exclude **/_internal/**/* --excludePrivate --hideGenerator --out docs src",
-    "publish:development": "standard-version --prerelease alpha -m 'chore(alpha): %s' --author='ci <ci@openhps.org>' && npm publish --tag dev --access public",
-    "publish:beta": "standard-version --prerelease beta -m 'chore(beta): %s' --author='ci <ci@openhps.org>' && npm publish --tag beta --access public",
-    "publish:release": "standard-version -m 'chore(release): %s' --author='ci <ci@openhps.org>' && npm publish --tag latest --access public"
+    "publish:development": "standard-version --prerelease alpha -m 'chore(alpha): %s' --author='ci <ci@openhps.org>' && npm publish --tag dev",
+    "publish:beta": "standard-version --prerelease beta -m 'chore(beta): %s' --author='ci <ci@openhps.org>' && npm publish --tag beta",
+    "publish:release": "standard-version -m 'chore(release): %s' --author='ci <ci@openhps.org>' && npm publish --tag latest"
   },
   "keywords": [
     "openhps",
     "csv"
   ],
   "dependencies": {
-    "@openhps/core": ">=0.1.0-alpha.67",
+    "@openhps/core": "0.1.0-alpha.73",
     "csv-parser": "^2.3.3",
     "csv-writer": "^1.6.0",
     "reflect-metadata": "^0.1.13"
@@ -46,19 +50,28 @@
     "@types/chai": "^4.2.12",
     "@types/mocha": "^5.2.7",
     "@types/node": "^12.12.54",
+    "@typescript-eslint/eslint-plugin": "^3.9.1",
+    "@typescript-eslint/parser": "^3.9.1",
     "chai": "^4.2.0",
+    "eslint": "^7.7.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-jsdoc": "^30.2.4",
+    "eslint-plugin-prettier": "^3.1.4",
     "husky": "^4.2.5",
     "jenkins-mocha": "^8.0.0",
     "mocha": "^6.2.3",
     "npm-run-all": "^4.1.5",
     "nyc": "^14.1.1",
+    "prettier": "^2.0.5",
     "shx": "^0.3.2",
     "standard-version": "^7.1.0",
     "ts-node": "^8.10.2",
-    "tslint": "^5.20.1",
-    "tslint-no-circular-imports": "^0.7.0",
     "typedoc": "^0.15.1",
-    "typescript": "^3.9.7"
+    "typescript": "^3.9.7",
+    "webpack": "^4.44.1",
+    "webpack-auto-inject-version": "^1.2.2",
+    "webpack-cli": "^3.3.12"
   },
   "nyc": {
     "branches": 0,
