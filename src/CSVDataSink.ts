@@ -17,6 +17,7 @@ export class CSVDataSink<In extends DataFrame> extends SinkNode<In> {
     private _writeQueue: any[] = [];
     private _writeReady = true;
     private _timeout: NodeJS.Timeout;
+    private _pendingResolve: () => void;
 
     constructor(
         file: string,
@@ -61,14 +62,17 @@ export class CSVDataSink<In extends DataFrame> extends SinkNode<In> {
                 }
                 this._csvWriter
                     .writeRecords(queue)
-                    .then(resolve)
+                    .then(() => {
+                        this._pendingResolve();
+                        resolve();
+                    })
                     .catch(reject)
                     .finally(() => {
                         this._writeReady = true;
                     });
             } else {
                 this._timeout = setTimeout(this._handleQueue.bind(this), 100);
-                resolve();
+                this._pendingResolve = resolve;
             }
         });
     }

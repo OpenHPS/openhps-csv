@@ -38,8 +38,10 @@ describe('csv sink', () => {
                 };
             }))
             .build().then((model: Model) => {
-                model.emit('destroy');
-                done();
+                setTimeout(() => {
+                    model.emit('destroy');
+                    done();
+                }, 1000);
             }).catch((ex: any) => {
                 done(ex);
             });
