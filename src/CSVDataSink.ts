@@ -14,6 +14,9 @@ export class CSVDataSink<In extends DataFrame> extends SinkNode<In> {
     private _file: string;
     private _csvWriter: CsvWriter<ObjectMap<any>>;
     private _header: ObjectStringifierHeader;
+    private _writeQueue: any[] = [];
+    private _writeReady = true;
+    private _timeout: NodeJS.Timeout;
 
     constructor(
         file: string,
@@ -41,12 +44,32 @@ export class CSVDataSink<In extends DataFrame> extends SinkNode<In> {
 
     public onPush(data: In): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            this._csvWriter
-                .writeRecords([this._writeCallback(data)])
-                .then(() => {
-                    resolve();
-                })
-                .catch(reject);
+            this._writeQueue.push(this._writeCallback(data));
+            this._handleQueue().then(resolve).catch(reject);
+        });
+    }
+
+    private _handleQueue(): Promise<void> {
+        return new Promise((resolve, reject) => {
+            if (this._writeReady) {
+                this._writeReady = false;
+                const queue = new Array(...this._writeQueue);
+                this._writeQueue = [];
+                if (this._timeout) {
+                    clearTimeout(this._timeout);
+                    this._timeout = undefined;
+                }
+                this._csvWriter
+                    .writeRecords(queue)
+                    .then(resolve)
+                    .catch(reject)
+                    .finally(() => {
+                        this._writeReady = true;
+                    });
+            } else {
+                this._timeout = setTimeout(this._handleQueue.bind(this), 100);
+                resolve();
+            }
         });
     }
 }
