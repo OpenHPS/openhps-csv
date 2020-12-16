@@ -5,10 +5,10 @@ const path = require('path');
 module.exports = [
 {
   mode: 'development',
-  entry: './dist/index.js',
+  entry: './dist/cjs/index.js',
   devtool: 'source-map',
   output: {
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, 'dist/web'),
     filename: 'openhps-csv.js',
     library: '@openhps/csv',
     libraryTarget: 'umd',
@@ -32,7 +32,7 @@ module.exports = [
   externals: ["@openhps/core"],
 },{
   mode: 'production',
-  entry: './dist/index.js',
+  entry: './dist/cjs/index.js',
   devtool: 'source-map',
   optimization: {
     minimize: true,
@@ -66,7 +66,7 @@ module.exports = [
   },
   externals: ["@openhps/core"],
   output: {
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, 'dist/web'),
     filename: 'openhps-csv.min.js',
     library: '@openhps/csv',
     libraryTarget: 'umd',
