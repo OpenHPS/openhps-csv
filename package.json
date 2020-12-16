@@ -45,19 +45,14 @@
     "csv"
   ],
   "dependencies": {
-    "@openhps/core": ">=0.2.0-alpha.3",
     "csv-parser": "^2.3.5",
-    "csv-writer": "^1.6.0",
+    "csv-writer": "^1.6.0"
+  },
+  "peerDependencies": {
+    "@openhps/core": ">=0.2.0-alpha.3",
     "reflect-metadata": ">=0.1.13"
   },
   "devDependencies": {
-    "@babel/cli": "^7.12.10",
-    "@babel/core": "^7.12.10",
-    "@babel/node": "^7.12.10",
-    "@babel/plugin-transform-runtime": "^7.12.10",
-    "@babel/preset-env": "^7.12.11",
-    "@babel/register": "^7.12.10",
-    "@babel/runtime": "^7.12.5",
     "@commitlint/cli": "^8.3.5",
     "@commitlint/config-conventional": "^8.3.4",
     "@types/chai": "^4.2.14",
