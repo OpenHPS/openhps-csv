@@ -57,7 +57,9 @@ export class CSVDataSource<Out extends DataFrame> extends ListSourceNode<Out> {
     protected options: csv.Options & SourceNodeOptions;
 
     constructor(file: string, rowCallback: (row: any) => Out, options: csv.Options & SourceNodeOptions = {}) {
-        super([], options.source ? options.source : new DataObject(path.basename(file)), options);
+        super([], options);
+        this.options.source = this.options.source || new DataObject(path.basename(file));
+
         this._rowCallback = rowCallback;
         this._file = file;
 

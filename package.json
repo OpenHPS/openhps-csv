@@ -49,11 +49,11 @@
     "csv-writer": "^1.6.0"
   },
   "peerDependencies": {
-    "@openhps/core": ">=0.2.0-alpha.3",
+    "@openhps/core": ">=0.2.0-alpha.9",
     "reflect-metadata": ">=0.1.13"
   },
   "devDependencies": {
-    "@openhps/core": ">=0.2.0-alpha.3",
+    "@openhps/core": ">=0.2.0-alpha.9",
     "reflect-metadata": ">=0.1.13",
     "@commitlint/cli": "^8.3.5",
     "@commitlint/config-conventional": "^8.3.4",
