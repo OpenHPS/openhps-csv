@@ -7,7 +7,7 @@ import { ObjectStringifierHeader } from 'csv-writer/src/lib/record';
 /**
  * CSVDataSink
  *
- *
+ * @category Sink node
  */
 export class CSVDataSink<In extends DataFrame> extends SinkNode<In> {
     private _writeCallback: (frame: In) => DataFrame;

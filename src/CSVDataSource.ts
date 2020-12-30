@@ -4,7 +4,7 @@ import * as fs from 'fs';
 import * as csv from 'csv-parser';
 
 /**
- * CSVDataSource
+ * Source node for CSV files.
  *
  * ## Usage
  * Files are loaded when the model is build. You can force a reset using the ```reset()``` function.
@@ -50,6 +50,8 @@ import * as csv from 'csv-parser';
  *  separator: ";"
  * })
  * ```
+ *
+ * @category Source node
  */
 export class CSVDataSource<Out extends DataFrame> extends ListSourceNode<Out> {
     private _rowCallback: (row: any) => Out;

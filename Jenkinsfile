@@ -8,6 +8,7 @@ pipeline {
                 sh 'npm run clean'
                 sh 'npm run build:cjs'
                 sh 'npm run build:esm'
+                sh 'npm run build:webpack'
             }
         }
         stage('Quality') {
@@ -66,10 +67,14 @@ pipeline {
                 allowMissing: false,
                 alwaysLinkToLastBuild: true,
                 keepAll: true,
-                reportDir: 'docs',
+                reportDir: 'docs/out',
                 reportFiles: '*.*',
                 reportName: "Documentation"
             ])
+            archiveArtifacts artifacts: 'dist/web/openhps-csv.js', fingerprint: true
+            archiveArtifacts artifacts: 'dist/web/openhps-csv.js.map', fingerprint: true
+            archiveArtifacts artifacts: 'dist/web/openhps-csv.min.js', fingerprint: true
+            archiveArtifacts artifacts: 'dist/web/openhps-csv.min.js.map', fingerprint: true
             deleteDir()
         }
     }
