@@ -50,9 +50,8 @@ pipeline {
                     steps {
                         echo 'Publishing Release ...'
                         sh 'npm run publish:release'
-                        sh 'git push origin HEAD:master'
                         sshagent(['git-openhps-ssh']) {
-                            sh "git push origin master"
+                            sh "git push origin HEAD:master"
                         }
                     }
                 }
@@ -71,10 +70,17 @@ pipeline {
                 reportFiles: '*.*',
                 reportName: "Documentation"
             ])
+
+            archiveArtifacts artifacts: 'dist/web/openhps-csv.es.js', fingerprint: true
+            archiveArtifacts artifacts: 'dist/web/openhps-csv.es.js.map', fingerprint: true
+            archiveArtifacts artifacts: 'dist/web/openhps-csv.es.min.js', fingerprint: true
+            archiveArtifacts artifacts: 'dist/web/openhps-csv.es.min.js.map', fingerprint: true
+
             archiveArtifacts artifacts: 'dist/web/openhps-csv.js', fingerprint: true
             archiveArtifacts artifacts: 'dist/web/openhps-csv.js.map', fingerprint: true
             archiveArtifacts artifacts: 'dist/web/openhps-csv.min.js', fingerprint: true
             archiveArtifacts artifacts: 'dist/web/openhps-csv.min.js.map', fingerprint: true
+
             deleteDir()
         }
     }

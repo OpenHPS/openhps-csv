@@ -10,14 +10,14 @@ import * as csv from 'csv-parser';
  * Files are loaded when the model is build. You can force a reset using the ```reset()``` function.
  *
  * ### Basic Usage
- * **example1.csv**
+ * example1.csv**
  * ```csv
  * TIME,NAME,X,Y
  * 1,Maxim,0,0
  * 2,Maxim,0,1
  * 3,Maxim,1,1
  * ```
- * **Implementation**
+ * Implementation**
  * ```typescript
  * new CSVDataSource("example1.csv", (row: any) => {
  *  const object = new DataObject(row.NAME);
@@ -31,13 +31,13 @@ import * as csv from 'csv-parser';
  * ### Advanced Usage
  * For more info, please check the [csv-parser](https://www.npmjs.com/package/csv-parser) documentation.
  *
- * **example3.csv**
+ * example3.csv**
  * ```csv
  * 1;Maxim;0;0
  * 2;Maxim;0;1
  * 3;Maxim;1;1
  * ```
- * **Implementation**
+ * Implementation**
  * ```typescript
  * new CSVDataSource("example1.csv", (row: any) => {
  *  const object = new DataObject(row.NAME);
@@ -56,9 +56,9 @@ import * as csv from 'csv-parser';
 export class CSVDataSource<Out extends DataFrame> extends ListSourceNode<Out> {
     private _rowCallback: (row: any) => Out;
     private _file: string;
-    protected options: csv.Options & SourceNodeOptions;
+    protected options: CSVDataSourceOptions;
 
-    constructor(file: string, rowCallback: (row: any) => Out, options: csv.Options & SourceNodeOptions = {}) {
+    constructor(file: string, rowCallback: (row: any) => Out, options?: CSVDataSourceOptions) {
         super([], options);
         this.options.source = this.options.source || new DataObject(path.basename(file));
 
@@ -109,3 +109,5 @@ export class CSVDataSource<Out extends DataFrame> extends ListSourceNode<Out> {
         });
     }
 }
+
+export interface CSVDataSourceOptions extends SourceNodeOptions, csv.Options {}
