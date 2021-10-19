@@ -1,0 +1,58 @@
+name: CI
+
+on:
+  push:
+    branches: [ master, dev ]
+  pull_request:
+    branches: [ master, dev ]
+  workflow_dispatch:
+
+jobs:
+  build_and_test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build
+        run: |
+          npm install
+          npm run build:three
+          npm run build:cjs
+          npm run build:esm
+          npm run build:webpack
+      - name: Quality
+        run: |
+          npm run lint
+      - name: Documentation
+        run: |
+          npm run build:typedoc
+      - name: Test
+        run: |
+          npm run test
+          npm run cover
+      - name: Publish Web Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: web
+          path: |
+            dist/web/*
+            !dist/web/*.txt
+      - name: Publish Documentation
+        uses: actions/upload-artifact@v2
+        with:
+          name: docs
+          path: |
+            docs/out/*
+      - name: Configure Publish
+        run: |
+          git config --global user.name 'CI'
+          git config --global user.email 'ci@openhps.org'
+      - name: Publish NPM development
+        if: github.ref == 'refs/heads/dev'
+        run: |
+          npm run publish:development
+          git push
+      - name: Publish NPM master
+        if: github.ref == 'refs/heads/master'
+        run: |
+          npm run publish:release
+          git push
