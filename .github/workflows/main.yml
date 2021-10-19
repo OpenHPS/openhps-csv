@@ -21,7 +21,7 @@ jobs:
           npm run lint
       - name: Test
         run: |
-          npm run test
+          npm run test -- --reporter mocha-junit-reporter
           npm run cover
       - name: Publish Web Artifacts
         uses: actions/upload-artifact@v2
@@ -40,11 +40,11 @@ jobs:
         uses: EnricoMi/publish-unit-test-result-action@v1
         if: always()
         with:
-          files: artifacts/test/xunit.xml
+          files: test-results.xml
       - name: ReportGenerator
         uses: danielpalme/ReportGenerator-GitHub-Action@4.8.12
         with:
-          reports: 'artifacts/coverage/cobertura-coverage.xml'
+          reports: 'coverage/cobertura-coverage.xml'
           targetdir: 'coveragereport'
           reporttypes: 'HtmlInline;Cobertura'
           verbosity: 'Info'
