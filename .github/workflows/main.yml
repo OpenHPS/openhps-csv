@@ -15,16 +15,10 @@ jobs:
       - name: Build
         run: |
           npm install
-          npm run build:three
-          npm run build:cjs
-          npm run build:esm
-          npm run build:webpack
+          npm run build
       - name: Quality
         run: |
           npm run lint
-      - name: Documentation
-        run: |
-          npm run build:typedoc
       - name: Test
         run: |
           npm run test
