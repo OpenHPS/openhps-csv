@@ -41,19 +41,11 @@ jobs:
         if: always()
         with:
           files: test-results.xml
-      - name: ReportGenerator
-        uses: danielpalme/ReportGenerator-GitHub-Action@4.8.12
+      - name: Upload code coverage
+        uses: codecov/codecov-action@v2
         with:
-          reports: 'coverage/cobertura-coverage.xml'
-          targetdir: 'coveragereport'
-          reporttypes: 'HtmlInline;Cobertura'
-          verbosity: 'Info'
-          toolpath: 'reportgeneratortool'
-      - name: Publish Cobertura Report
-        uses: actions/upload-artifact@v2.2.3
-        with:
-          name: CoverageReport 
-          path: coveragereport
+          files: coverage/cobertura-coverage.xml
+          verbose: true
       - name: Configure Publish
         run: |
           git config --global user.name 'CI'
@@ -72,5 +64,6 @@ jobs:
         with:
           token: ${{ secrets.NPM_TOKEN }}
       - name: Publish to GitHub
+        if: success()
         run: |
           git push
