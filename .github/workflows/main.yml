@@ -36,17 +36,41 @@ jobs:
           name: docs
           path: |
             docs/out/*
+      - name: Publish Unit Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v1
+        if: always()
+        with:
+          files: artifacts/test/xunit.xml
+      - name: ReportGenerator
+        uses: danielpalme/ReportGenerator-GitHub-Action@4.8.12
+        with:
+          reports: 'artifacts/coverage/cobertura-coverage.xml'
+          targetdir: 'coveragereport'
+          reporttypes: 'HtmlInline;Cobertura'
+          verbosity: 'Info'
+          toolpath: 'reportgeneratortool'
+      - name: Publish Cobertura Report
+        uses: actions/upload-artifact@v2.2.3
+        with:
+          name: CoverageReport 
+          path: coveragereport
       - name: Configure Publish
         run: |
           git config --global user.name 'CI'
           git config --global user.email 'ci@openhps.org'
-      - name: Publish NPM development
+      - name: Bump version development
         if: github.ref == 'refs/heads/dev'
         run: |
-          npm run publish:development
-          git push
-      - name: Publish NPM master
+          npm run bump:development
+      - name: Bump version release
         if: github.ref == 'refs/heads/master'
         run: |
-          npm run publish:release
+          npm run bump:release
+      - name: Publish to NPM
+        uses: JS-DevTools/npm-publish@v1
+        if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/dev'
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
+      - name: Publish to GitHub
+        run: |
           git push

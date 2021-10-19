@@ -3,8 +3,8 @@
   @openhps/csv
 </h1>
 <p align="center">
-    <a href="https://ci.mvdw-software.com/job/openhps-csv/" target="_blank">
-        <img alt="Build Status" src="https://ci.mvdw-software.com/job/openhps-csv/job/master/badge/icon">
+    <a href="https://github.com/OpenHPS/openhps-csv/actions/workflows/main.yml" target="_blank">
+        <img alt="Build Status" src="https://github.com/OpenHPS/openhps-csv/actions/workflows/main.yml/badge.svg">
     </a>
     <a href="https://ci.mvdw-software.com/view/OpenHPS/job/openhps-csv/job/master/lastCompletedBuild/testReport" target="_blank">
         <img alt="Tests" src="https://img.shields.io/jenkins/tests?compact_message&jobUrl=https%3A%2F%2Fci.mvdw-software.com%2Fview%2FOpenHPS%2Fjob%2Fopenhps-csv%2Fjob%2Fmaster">
