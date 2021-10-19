@@ -6,11 +6,8 @@
     <a href="https://github.com/OpenHPS/openhps-csv/actions/workflows/main.yml" target="_blank">
         <img alt="Build Status" src="https://github.com/OpenHPS/openhps-csv/actions/workflows/main.yml/badge.svg">
     </a>
-    <a href="https://ci.mvdw-software.com/view/OpenHPS/job/openhps-csv/job/master/lastCompletedBuild/testReport" target="_blank">
-        <img alt="Tests" src="https://img.shields.io/jenkins/tests?compact_message&jobUrl=https%3A%2F%2Fci.mvdw-software.com%2Fview%2FOpenHPS%2Fjob%2Fopenhps-csv%2Fjob%2Fmaster">
-    </a>
-    <a href="https://ci.mvdw-software.com/view/OpenHPS/job/openhps-csv/job/master/lastCompletedBuild/cobertura/" target="_blank">
-        <img alt="Code coverage" src="https://img.shields.io/jenkins/coverage/cobertura?jobUrl=https%3A%2F%2Fci.mvdw-software.com%2Fview%2FOpenHPS%2Fjob%2Fopenhps-csv%2Fjob%2Fmaster%2F">
+    <a href="https://codecov.io/gh/OpenHPS/openhps-csv">
+        <img src="https://codecov.io/gh/OpenHPS/openhps-csv/branch/master/graph/badge.svg?token=U896HUBDCZ"/>
     </a>
     <a href="https://codeclimate.com/github/OpenHPS/openhps-csv/" target="_blank">
         <img alt="Maintainability" src="https://img.shields.io/codeclimate/maintainability/OpenHPS/openhps-csv">
