@@ -3,7 +3,7 @@ import {
     Model, ModelBuilder, DataObject, Absolute2DPosition, DataFrame, CallbackSinkNode
 } from '@openhps/core';
 import {
-    CSVDataSource
+    CSVDataSource, CSVDataSourceOptions
 } from '../../src';
 import { expect } from 'chai';
 
@@ -74,6 +74,42 @@ describe('csv source', () => {
                 expect(frame.source.uid).to.equal("Maxim");
                 expect(frame.source.getPosition()).to.not.be.undefined;
                 expect(frame.source.getPosition().timestamp).to.equal(1);
+                done();
+            }))
+            .build().then((model: Model) => {
+                return model.pull();
+            }).then(() => {}).catch((ex: any) => {
+                done(ex);
+            });
+    });
+
+    it('use case 4', (done) => {
+        ModelBuilder.create()
+            .from(new (class ABC extends CSVDataSource<DataFrame> {
+               constructor(rowCallback: (row: any) => DataFrame, options?: CSVDataSourceOptions) {
+                    super(undefined, rowCallback, options);
+                    this.parseContent(
+                        `1;Maxim;0;0
+                        2;Maxim;0;1
+                        3;Maxim;1;1`
+                    ).then(data => {
+                        this.inputData = data;
+                    });
+               }
+
+            })((row: any) => {
+                const object = new DataObject(row.NAME);
+                const position = new Absolute2DPosition(parseFloat(row.X), parseFloat(row.Y));
+                position.timestamp = parseInt(row.TIME);
+                object.setPosition(position);
+                return new DataFrame(object);
+            }, {
+                headers: ["TIME", "NAME", "X", "Y"],
+                separator: ";"
+            }))
+            .to(new CallbackSinkNode((frame: DataFrame) => {
+                expect(frame.source).to.not.be.undefined;
+                expect(frame.source.uid).to.equal("Maxim");
                 done();
             }))
             .build().then((model: Model) => {

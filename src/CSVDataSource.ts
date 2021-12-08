@@ -2,6 +2,7 @@ import { DataFrame, DataObject, ListSourceNode, SourceNodeOptions } from '@openh
 import * as path from 'path';
 import * as fs from 'fs';
 import * as csv from 'csv-parser';
+import { Readable, Stream } from 'stream';
 
 /**
  * Source node for CSV files.
@@ -54,15 +55,15 @@ import * as csv from 'csv-parser';
  * @category Source node
  */
 export class CSVDataSource<Out extends DataFrame> extends ListSourceNode<Out> {
-    private _rowCallback: (row: any) => Out;
+    protected rowCallback: (row: any) => Out;
     private _file: string;
     protected options: CSVDataSourceOptions;
 
     constructor(file: string, rowCallback: (row: any) => Out, options?: CSVDataSourceOptions) {
         super([], options);
-        this.options.source = this.options.source || new DataObject(path.basename(file));
+        this.options.source = this.options.source || new DataObject(file ? path.basename(file) : undefined);
 
-        this._rowCallback = rowCallback;
+        this.rowCallback = rowCallback;
         this._file = file;
 
         this.once('build', this._initCSV.bind(this));
@@ -70,12 +71,32 @@ export class CSVDataSource<Out extends DataFrame> extends ListSourceNode<Out> {
 
     private _initCSV(): Promise<void> {
         return new Promise((resolve, reject) => {
+            if (!this._file) {
+                return resolve();
+            }
+            this.parseStream(fs.createReadStream(this._file))
+                .then((data) => {
+                    this.inputData = data;
+                    resolve();
+                })
+                .catch(reject);
+        });
+    }
+
+    parseContent(content: string): Promise<Out[]> {
+        const s = new Readable();
+        s.push(content);
+        s.push(null);
+        return this.parseStream(s);
+    }
+
+    parseStream(s: Stream): Promise<Out[]> {
+        return new Promise((resolve, reject) => {
             const inputData: Out[] = [];
-            const stream = fs
-                .createReadStream(this._file)
+            const stream = s
                 .pipe(csv(this.options))
                 .on('data', (row: any) => {
-                    const frame = this._rowCallback(row);
+                    const frame = this.rowCallback(row);
                     if (frame !== null && frame !== undefined) {
                         if (frame.source === undefined) {
                             frame.source = this.source;
@@ -84,19 +105,18 @@ export class CSVDataSource<Out extends DataFrame> extends ListSourceNode<Out> {
                     }
                 })
                 .on('end', () => {
-                    this.inputData = inputData;
                     stream.destroy();
                 })
                 .on('close', function (err: any) {
                     if (err) {
                         return reject(err);
                     }
-                    resolve();
+                    resolve(inputData);
                 });
         });
     }
 
-    public reset(): Promise<void> {
+    reset(): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             this.inputData = [];
             this._initCSV()
