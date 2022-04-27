@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.6 (2022-04-27)
+
+
+### Features
+
+* reload csv data source ([874b4a7](https://github.com/OpenHPS/openhps-csv/commit/874b4a70159b4e55a618e9a7597339bebb37bc53))
+
 ### 0.1.5 (2022-04-26)
 
 
