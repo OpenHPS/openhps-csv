@@ -116,6 +116,17 @@ export class CSVDataSource<Out extends DataFrame> extends ListSourceNode<Out> {
         });
     }
 
+    /**
+     * Reload the source with a new CSV file
+     *
+     * @param {string} file New CSV file
+     * @returns {Promise<void>} Promise of the reload
+     */
+    reload(file: string): Promise<void> {
+        this._file = file;
+        return this.reset();
+    }
+
     reset(): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             this.inputData = [];
