@@ -12,7 +12,7 @@ import { Readable, Stream } from 'stream';
  *
  * ### Basic Usage
  * example1.csv**
- * ```csv
+ * ```text
  * TIME,NAME,X,Y
  * 1,Maxim,0,0
  * 2,Maxim,0,1
@@ -33,7 +33,7 @@ import { Readable, Stream } from 'stream';
  * For more info, please check the [csv-parser](https://www.npmjs.com/package/csv-parser) documentation.
  *
  * example3.csv**
- * ```csv
+ * ```text
  * 1;Maxim;0;0
  * 2;Maxim;0;1
  * 3;Maxim;1;1
