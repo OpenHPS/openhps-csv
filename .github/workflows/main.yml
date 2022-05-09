@@ -31,7 +31,6 @@ jobs:
       - name: Build
         run: |
           npm run build
-          npm run size
       - name: Upload web artifacts
         uses: actions/upload-artifact@v2
         with:
