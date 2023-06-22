@@ -21,11 +21,11 @@ import { Readable, Stream } from 'stream';
  * Implementation**
  * ```typescript
  * new CSVDataSource("example1.csv", (row: any) => {
- *  const object = new DataObject(row.NAME);
- *  const position = new Absolute2DPosition(parseFloat(row.X), parseFloat(row.Y));
- *  position.timestamp = parseInt(row.TIME);
- *  object.setPosition(position);
- *  return new DataFrame(object);
+ * const object = new DataObject(row.NAME);
+ * const position = new Absolute2DPosition(parseFloat(row.X), parseFloat(row.Y));
+ * position.timestamp = parseInt(row.TIME);
+ * object.setPosition(position);
+ * return new DataFrame(object);
  * })
  * ```
  *
@@ -41,25 +41,24 @@ import { Readable, Stream } from 'stream';
  * Implementation**
  * ```typescript
  * new CSVDataSource("example1.csv", (row: any) => {
- *  const object = new DataObject(row.NAME);
- *  const position = new Absolute2DPosition(parseFloat(row.X), parseFloat(row.Y));
- *  position.timestamp = parseInt(row.TIME);
- *  object.setPosition(position);
- *  return new DataFrame(object);
+ * const object = new DataObject(row.NAME);
+ * const position = new Absolute2DPosition(parseFloat(row.X), parseFloat(row.Y));
+ * position.timestamp = parseInt(row.TIME);
+ * object.setPosition(position);
+ * return new DataFrame(object);
  * }, {
- *  headers: ["TIME", "NAME", "X", "Y"],
- *  separator: ";"
+ * headers: ["TIME", "NAME", "X", "Y"],
+ * separator: ";"
  * })
  * ```
- *
  * @category Source node
  */
 export class CSVDataSource<Out extends DataFrame> extends ListSourceNode<Out> {
-    protected rowCallback: (row: any) => Out;
+    protected rowCallback: (row: any) => Out | Promise<Out>;
     private _file: string;
     protected options: CSVDataSourceOptions;
 
-    constructor(file: string, rowCallback: (row: any) => Out, options?: CSVDataSourceOptions) {
+    constructor(file: string, rowCallback: (row: any) => Out | Promise<Out>, options?: CSVDataSourceOptions) {
         super([], options);
         this.options.source = this.options.source || new DataObject(file ? path.basename(file) : undefined);
 
@@ -95,8 +94,8 @@ export class CSVDataSource<Out extends DataFrame> extends ListSourceNode<Out> {
             const inputData: Out[] = [];
             const stream = s
                 .pipe(csv(this.options))
-                .on('data', (row: any) => {
-                    const frame = this.rowCallback(row);
+                .on('data', async (row: any) => {
+                    const frame = (await Promise.resolve(this.rowCallback(row))) as Out;
                     if (frame !== null && frame !== undefined) {
                         if (frame.source === undefined) {
                             frame.source = this.source;
@@ -118,7 +117,6 @@ export class CSVDataSource<Out extends DataFrame> extends ListSourceNode<Out> {
 
     /**
      * Reload the source with a new CSV file
-     *
      * @param {string} file New CSV file
      * @returns {Promise<void>} Promise of the reload
      */
