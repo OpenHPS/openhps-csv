@@ -40,8 +40,8 @@ export class CSVDataObjectService<T extends DataObject> extends DataObjectServic
             const inputData: T[] = [];
             const stream = s
                 .pipe(csv(this.options))
-                .on('data', (row: any) => {
-                    const object = this.options.rowCallback(row);
+                .on('data', async (row: any) => {
+                    const object = await Promise.resolve(this.options.rowCallback(row));
                     if (object !== null && object !== undefined) {
                         inputData.push(object);
                     }
@@ -61,5 +61,5 @@ export class CSVDataObjectService<T extends DataObject> extends DataObjectServic
 
 export interface CSVDataServiceOptions<T> extends DataServiceOptions<T>, csv.Options {
     file: string;
-    rowCallback: (row: any) => T;
+    rowCallback: (row: any) => T | Promise<T>;
 }
