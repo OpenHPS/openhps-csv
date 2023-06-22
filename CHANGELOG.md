@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.10 (2023-06-22)
+
+
+### Features
+
+* csv data service ([129b31e](https://github.com/OpenHPS/openhps-csv/commit/129b31e93904920774cf678f9d006c62d6263d67))
+
 ### 0.1.9 (2023-06-22)
 
 
