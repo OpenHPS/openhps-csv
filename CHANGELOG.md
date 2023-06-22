@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.11 (2023-06-22)
+
+
+### Bug Fixes
+
+* data object service unprocessed ([81e9cb1](https://github.com/OpenHPS/openhps-csv/commit/81e9cb1f25a37a03e177a10853966cda39036cae))
+
 ### 0.1.10 (2023-06-22)
 
 
