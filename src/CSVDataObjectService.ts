@@ -38,13 +38,17 @@ export class CSVDataObjectService<T extends DataObject> extends DataObjectServic
     parseStream(s: Stream): Promise<T[]> {
         return new Promise((resolve, reject) => {
             const inputData: T[] = [];
+            let countUnprocessed = 0;
+            let countProcessed = 0;
             const stream = s
                 .pipe(csv(this.options))
                 .on('data', async (row: any) => {
+                    countUnprocessed++;
                     const object = await Promise.resolve(this.options.rowCallback(row));
                     if (object !== null && object !== undefined) {
                         inputData.push(object);
                     }
+                    countProcessed++;
                 })
                 .on('end', () => {
                     stream.destroy();
@@ -53,7 +57,16 @@ export class CSVDataObjectService<T extends DataObject> extends DataObjectServic
                     if (err) {
                         return reject(err);
                     }
-                    resolve(inputData);
+                    if (countProcessed !== countUnprocessed) {
+                        const timer = setInterval(() => {
+                            if (countProcessed === countUnprocessed) {
+                                clearInterval(timer);
+                                resolve(inputData);
+                            }
+                        }, 100);
+                    } else {
+                        resolve(inputData);
+                    }
                 });
         });
     }
