@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.1.9 (2023-06-22)
+
+
+### Features
+
+* row callback async ([1ed718a](https://github.com/OpenHPS/openhps-csv/commit/1ed718a5ae978784d029762821eb4ab52f8fd2cc))
+
 ### 0.1.8 (2022-05-09)
 
 ### 0.1.7 (2022-05-06)
