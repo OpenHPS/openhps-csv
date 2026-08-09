@@ -9,3 +9,8 @@ test-results.xml
 # Linked Software Dependencies
 components/**/*.jsonld
 config/**/*.json
+
+# OpenHPS baseline
+.cache/
+xunit.xml
+.DS_Store
