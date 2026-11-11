@@ -1,4 +1,8 @@
 {
     "extends": "./tsconfig.base.json",
+    // TypeScript 6 no longer infers rootDir from the common source directory.
+    "compilerOptions": {
+        "rootDir": "../src"
+    },
     "include": ["../src"]
 }

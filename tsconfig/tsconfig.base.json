@@ -4,6 +4,15 @@
         "module": "commonjs",
         "moduleResolution": "node",
         "noImplicitAny": false,
+        // TypeScript 6 flipped the defaults of `strict` and `esModuleInterop` to
+        // true. Both are pinned to their previous values here so the migration to
+        // TypeScript 6 does not change the compiled output or the diagnostics.
+        "strict": false,
+        "esModuleInterop": false,
+        // TypeScript 6 deprecates legacy "node" (node10) resolution. The dual
+        // CJS/ESM bundles still rely on it, so silence the deprecation until the
+        // module layout is migrated; TypeScript 7 removes the option entirely.
+        "ignoreDeprecations": "6.0",
         "noEmitHelpers": true,
         "importHelpers": true,
         "removeComments": false,
