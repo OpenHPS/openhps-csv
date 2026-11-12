@@ -1,14 +1,15 @@
 import { Constructor, DataObject, DataObjectService, DataServiceOptions, MemoryDataService } from '@openhps/core';
 import * as csv from 'csv-parser';
 import * as fs from 'fs';
-import { Readable, Stream } from 'stream';
+import { Stream } from 'stream';
+import { parseCsvContent, parseCsvStream } from './parseStream';
 
 export class CSVDataObjectService<T extends DataObject> extends DataObjectService<T> {
     protected options: CSVDataServiceOptions<T>;
 
     constructor(dataType: Constructor<T>, options?: CSVDataServiceOptions<T>) {
         super(new MemoryDataService(dataType));
-        this.options = options;
+        this.options = options ?? ({} as CSVDataServiceOptions<T>);
         this.once('build', this._initCSV.bind(this));
     }
 
@@ -29,46 +30,15 @@ export class CSVDataObjectService<T extends DataObject> extends DataObjectServic
     }
 
     parseContent(content: string): Promise<T[]> {
-        const s = new Readable();
-        s.push(content);
-        s.push(null);
-        return this.parseStream(s);
+        return parseCsvContent(content, this.options, this._onRow.bind(this));
     }
 
     parseStream(s: Stream): Promise<T[]> {
-        return new Promise((resolve, reject) => {
-            const inputData: T[] = [];
-            let countUnprocessed = 0;
-            let countProcessed = 0;
-            const stream = s
-                .pipe(csv(this.options))
-                .on('data', async (row: any) => {
-                    countUnprocessed++;
-                    const object = await Promise.resolve(this.options.rowCallback(row));
-                    if (object !== null && object !== undefined) {
-                        inputData.push(object);
-                    }
-                    countProcessed++;
-                })
-                .on('end', () => {
-                    stream.destroy();
-                })
-                .on('close', function (err: any) {
-                    if (err) {
-                        return reject(err);
-                    }
-                    if (countProcessed !== countUnprocessed) {
-                        const timer = setInterval(() => {
-                            if (countProcessed === countUnprocessed) {
-                                clearInterval(timer);
-                                resolve(inputData);
-                            }
-                        }, 100);
-                    } else {
-                        resolve(inputData);
-                    }
-                });
-        });
+        return parseCsvStream(s, this.options, this._onRow.bind(this));
+    }
+
+    private _onRow(row: any): Promise<T> {
+        return Promise.resolve().then(() => this.options.rowCallback(row));
     }
 }
 

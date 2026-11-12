@@ -45,11 +45,11 @@ export class CSVDataSink<In extends DataFrame> extends SinkNode<In> {
     public onPush(data: In): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             this._writeQueue.push(this._writeCallback(data));
-            this._handleQueue().then(resolve).catch(reject);
+            this._handleQueue(resolve, reject).catch(reject);
         });
     }
 
-    private _handleQueue(): Promise<void> {
+    private _handleQueue(onSuccess?: () => void, onError?: (err: any) => void): Promise<void> {
         return new Promise((resolve, reject) => {
             if (this._writeReady) {
                 this._writeReady = false;
@@ -62,17 +62,29 @@ export class CSVDataSink<In extends DataFrame> extends SinkNode<In> {
                 this._csvWriter
                     .writeRecords(queue)
                     .then(() => {
-                        this._pending.forEach((pending) => pending());
-                        this._pending.slice(0, this._pending.length);
+                        const pending = this._pending;
+                        this._pending = [];
+                        pending.forEach((pending) => pending());
+                        if (onSuccess) {
+                            onSuccess();
+                        }
                         resolve();
                     })
-                    .catch(reject)
+                    .catch((err) => {
+                        if (onError) {
+                            onError(err);
+                        }
+                        reject(err);
+                    })
                     .finally(() => {
                         this._writeReady = true;
                     });
             } else {
-                this._timeout = setTimeout(this._handleQueue.bind(this), 100);
-                this._pending.push(resolve);
+                if (this._timeout) {
+                    clearTimeout(this._timeout);
+                }
+                this._timeout = setTimeout(() => this._handleQueue(onSuccess, onError), 100);
+                this._pending.push(onSuccess || resolve);
             }
         });
     }

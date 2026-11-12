@@ -2,7 +2,8 @@ import { DataFrame, DataObject, ListSourceNode, SourceNodeOptions } from '@openh
 import * as path from 'path';
 import * as fs from 'fs';
 import * as csv from 'csv-parser';
-import { Readable, Stream } from 'stream';
+import { Stream } from 'stream';
+import { parseCsvContent, parseCsvStream } from './parseStream';
 
 /**
  * Source node for CSV files.
@@ -83,35 +84,19 @@ export class CSVDataSource<Out extends DataFrame> extends ListSourceNode<Out> {
     }
 
     parseContent(content: string): Promise<Out[]> {
-        const s = new Readable();
-        s.push(content);
-        s.push(null);
-        return this.parseStream(s);
+        return parseCsvContent(content, this.options, this._onRow.bind(this));
     }
 
     parseStream(s: Stream): Promise<Out[]> {
-        return new Promise((resolve, reject) => {
-            const inputData: Out[] = [];
-            const stream = s
-                .pipe(csv(this.options))
-                .on('data', async (row: any) => {
-                    const frame = (await Promise.resolve(this.rowCallback(row))) as Out;
-                    if (frame !== null && frame !== undefined) {
-                        if (frame.source === undefined) {
-                            frame.source = this.source;
-                        }
-                        inputData.push(frame);
-                    }
-                })
-                .on('end', () => {
-                    stream.destroy();
-                })
-                .on('close', function (err: any) {
-                    if (err) {
-                        return reject(err);
-                    }
-                    resolve(inputData);
-                });
+        return parseCsvStream(s, this.options, this._onRow.bind(this));
+    }
+
+    private _onRow(row: any): Promise<Out> {
+        return Promise.resolve(this.rowCallback(row)).then((frame) => {
+            if (frame !== null && frame !== undefined && frame.source === undefined) {
+                frame.source = this.source;
+            }
+            return frame;
         });
     }
 
